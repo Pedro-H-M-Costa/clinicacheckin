@@ -10,19 +10,18 @@ interface TotemLayoutProps {
 }
 
 export function TotemLayout({ children, onBack, backLabel = "Voltar", hideBack }: TotemLayoutProps) {
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
+    setNow(new Date());
     const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
 
-  const time = now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-  const date = now.toLocaleDateString("pt-BR", {
-    weekday: "long",
-    day: "2-digit",
-    month: "long",
-  });
+  const time = now ? now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "";
+  const date = now
+    ? now.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })
+    : "";
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-[1080px] flex-col bg-background">

@@ -55,7 +55,7 @@ function TotemPage() {
             <BigButton
               title="Toque para iniciar"
               subtitle="Faça seu check-in em menos de 30 segundos"
-              icon={<Check className="h-14 w-14" strokeWidth={3} />}
+              icon={<CheckCircle2 className="h-14 w-14" strokeWidth={2.5} />}
               onClick={() => setStep("method")}
             />
           </div>
