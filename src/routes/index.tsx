@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Fingerprint, IdCard, CheckCircle2, Clock, User, AlertCircle, Check } from "lucide-react";
+import { Fingerprint, IdCard, CheckCircle2, Clock, User, AlertCircle, Check, Smile } from "lucide-react";
 import { TotemLayout } from "@/components/totem/TotemLayout";
 import { BigButton } from "@/components/totem/BigButton";
 import { Numpad } from "@/components/totem/Numpad";
@@ -42,7 +42,7 @@ function TotemPage() {
       <TotemLayout hideBack>
         <div className="flex w-full flex-col items-center text-center">
           <div className="mb-12 flex h-40 w-40 items-center justify-center rounded-full bg-[image:var(--gradient-primary)] shadow-[var(--shadow-touch)]">
-            <CheckCircle2 className="h-24 w-24 text-primary-foreground" strokeWidth={2.5} />
+            <Smile className="h-24 w-24 text-primary-foreground" strokeWidth={2.5} />
           </div>
           <h1 className="text-7xl font-bold leading-tight text-foreground">
             Bem-vindo(a)
