@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Fingerprint, IdCard, CheckCircle2, Clock, User, AlertCircle } from "lucide-react";
+import { Fingerprint, IdCard, CheckCircle2, Clock, User, AlertCircle, Check } from "lucide-react";
 import { TotemLayout } from "@/components/totem/TotemLayout";
 import { BigButton } from "@/components/totem/BigButton";
 import { Numpad } from "@/components/totem/Numpad";
@@ -55,7 +55,7 @@ function TotemPage() {
             <BigButton
               title="Toque para iniciar"
               subtitle="Faça seu check-in em menos de 30 segundos"
-              icon={<Fingerprint className="h-14 w-14" />}
+              icon={<Check className="h-14 w-14" strokeWidth={3} />}
               onClick={() => setStep("method")}
             />
           </div>
