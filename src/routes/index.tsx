@@ -122,7 +122,7 @@ function TotemPage() {
 
           <button
             disabled={cpf.length !== 11}
-            onClick={() => setStep("confirm")}
+            onClick={() => setStep(cpf === "11111111111" ? "notFound" : "confirm")}
             className="mt-8 h-24 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-3xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
           >
             Confirmar
