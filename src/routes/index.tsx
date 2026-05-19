@@ -172,9 +172,9 @@ function TotemPage() {
     return (
       <TotemLayout onBack={reset} backLabel="Voltar ao início">
         <div className="flex w-full flex-col items-center text-center">
-          <div className="mb-8 flex h-40 w-40 items-center justify-center rounded-full bg-primary/15">
-            <div className="flex h-28 w-28 items-center justify-center rounded-full bg-primary shadow-[var(--shadow-touch)]">
-              <SearchX className="h-16 w-16 text-primary-foreground" strokeWidth={2.5} />
+          <div className="mb-8 flex h-40 w-40 items-center justify-center rounded-full bg-destructive/15">
+            <div className="flex h-28 w-28 items-center justify-center rounded-full bg-destructive shadow-[var(--shadow-touch)]">
+              <SearchX className="h-16 w-16 text-destructive-foreground" strokeWidth={2.5} />
             </div>
           </div>
 
