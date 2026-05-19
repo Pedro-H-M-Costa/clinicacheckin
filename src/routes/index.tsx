@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Step = "welcome" | "method" | "cpf" | "confirm" | "ticket";
+type Step = "welcome" | "method" | "cpf" | "confirm" | "ticket" | "notFound";
 
 function TotemPage() {
   const [step, setStep] = useState<Step>("welcome");
