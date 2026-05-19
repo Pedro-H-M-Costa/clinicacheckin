@@ -167,6 +167,63 @@ function TotemPage() {
     );
   }
 
+  // ---------- NOT FOUND ----------
+  if (step === "notFound") {
+    return (
+      <TotemLayout onBack={reset} backLabel="Voltar ao início">
+        <div className="flex w-full flex-col items-center text-center">
+          <div className="mb-8 flex h-40 w-40 items-center justify-center rounded-full bg-warning/20">
+            <div className="flex h-28 w-28 items-center justify-center rounded-full bg-warning shadow-[var(--shadow-touch)]">
+              <SearchX className="h-16 w-16 text-warning-foreground" strokeWidth={2.5} />
+            </div>
+          </div>
+
+          <h1 className="text-5xl font-bold text-foreground">
+            Agendamento não encontrado
+          </h1>
+          <p className="mt-4 max-w-xl text-2xl text-muted-foreground">
+            Não encontramos um agendamento para hoje com o CPF informado.
+          </p>
+
+          <div className="mt-10 w-full rounded-3xl border border-border bg-card p-8 text-left shadow-[var(--shadow-card)]">
+            <p className="text-lg font-semibold uppercase tracking-wider text-muted-foreground">
+              O que fazer?
+            </p>
+            <div className="mt-6 space-y-5">
+              <div className="flex items-start gap-5">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent text-primary">
+                  <Phone className="h-7 w-7" />
+                </div>
+                <p className="pt-2 text-2xl text-foreground">
+                  Dirija-se à recepção para que possamos verificar sua situação.
+                </p>
+              </div>
+              <div className="flex items-start gap-5">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent text-primary">
+                  <Calendar className="h-7 w-7" />
+                </div>
+                <p className="pt-2 text-2xl text-foreground">
+                  Verifique se o agendamento é para outra data.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              setCpf("");
+              setStep("cpf");
+            }}
+            className="mt-10 h-24 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-3xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98]"
+          >
+            Tentar novamente
+          </button>
+        </div>
+      </TotemLayout>
+    );
+  }
+
+
   // ---------- TICKET ----------
   return (
     <TotemLayout hideBack>
