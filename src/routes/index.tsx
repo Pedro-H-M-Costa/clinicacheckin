@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Fingerprint, IdCard, CheckCircle2, Clock, User, AlertCircle, Check, Smile } from "lucide-react";
+import { Fingerprint, IdCard, CheckCircle2, Clock, User, AlertCircle, Check, Smile, X, Phone, Calendar, SearchX } from "lucide-react";
 import { TotemLayout } from "@/components/totem/TotemLayout";
 import { BigButton } from "@/components/totem/BigButton";
 import { Numpad } from "@/components/totem/Numpad";
