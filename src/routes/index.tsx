@@ -198,14 +198,6 @@ function TotemPage() {
                   Dirija-se à recepção para que possamos verificar sua situação.
                 </p>
               </div>
-              <div className="flex items-start gap-5">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent text-primary">
-                  <Calendar className="h-7 w-7" />
-                </div>
-                <p className="pt-2 text-2xl text-foreground">
-                  {" "}
-                </p>
-              </div>
             </div>
           </div>
 
