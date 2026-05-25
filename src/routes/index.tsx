@@ -182,7 +182,7 @@ function TotemPage() {
             Agendamento não encontrado
           </h1>
           <p className="mt-4 max-w-xl text-2xl text-muted-foreground">
-            Não encontramos um agendamento para hoje com o CPF informado.
+            Não encontramos um agendamento para o CPF informado.
           </p>
 
           <div className="mt-10 w-full rounded-3xl border border-border bg-card p-8 text-left shadow-[var(--shadow-card)]">
@@ -203,7 +203,7 @@ function TotemPage() {
                   <Calendar className="h-7 w-7" />
                 </div>
                 <p className="pt-2 text-2xl text-foreground">
-                  Verifique se o agendamento é para outra data.
+                  {" "}
                 </p>
               </div>
             </div>
