@@ -124,11 +124,11 @@ function TotemPage() {
             </p>
           </div>
 
-          <Numpad value={convenio} onChange={setConvenio} maxLength={15} />
+          <Numpad value={convenio} onChange={setConvenio} maxLength={16} />
 
           <button
-            disabled={convenio.length < 11}
-            onClick={() => setStep(convenio === "11111111111" ? "notFound" : "confirm")}
+            disabled={convenio.length < 16}
+            onClick={() => setStep(convenio === "1111111111111111" ? "notFound" : "confirmConvenio")}
             className="mt-8 h-24 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-3xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
           >
             Confirmar
@@ -140,10 +140,6 @@ function TotemPage() {
 
   // ---------- CPF ----------
   if (step === "cpf") {
-    const formatCpfMask = (v: string) => {
-      const padded = v.padEnd(11, "•").slice(0, 11);
-      return `${padded.slice(0, 3)}.${padded.slice(3, 6)}.${padded.slice(6, 9)}-${padded.slice(9, 11)}`;
-    };
     return (
       <TotemLayout onBack={() => setStep("method")}>
         <div className="flex w-full flex-col items-center">
@@ -156,7 +152,7 @@ function TotemPage() {
 
           <div className="my-10 w-full rounded-3xl border-2 border-primary/30 bg-card px-10 py-8 text-center shadow-[var(--shadow-card)]">
             <p className="font-mono text-6xl font-bold tracking-wider text-primary tabular-nums">
-              {formatCpfMask(cpf)}
+              {formatCpfDisplay(cpf)}
             </p>
           </div>
 
@@ -164,7 +160,7 @@ function TotemPage() {
 
           <button
             disabled={cpf.length < 11}
-            onClick={() => setStep(cpf === "11111111111" ? "notFound" : "confirm")}
+            onClick={() => setStep(cpf === "11111111111" ? "notFound" : "confirmCpf")}
             className="mt-8 h-24 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-3xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
           >
             Confirmar
@@ -174,8 +170,8 @@ function TotemPage() {
     );
   }
 
-  // ---------- CONFIRM ----------
-  if (step === "confirm") {
+  // ---------- CONFIRM CPF ----------
+  if (step === "confirmCpf") {
     return (
       <TotemLayout onBack={() => setStep("cpf")}>
         <div className="flex w-full flex-col">
@@ -188,7 +184,7 @@ function TotemPage() {
 
           <div className="mt-10 space-y-5">
             <InfoRow icon={<User />} label="Paciente" value="Maria Silva Santos" />
-            <InfoRow icon={<IdCard />} label="CPF" value={formatCpf(cpf)} />
+            <InfoRow icon={<IdCard />} label="CPF" value={formatCpfDisplay(cpf)} />
             <InfoRow
               icon={<Clock />}
               label="Consulta agendada"
@@ -202,7 +198,46 @@ function TotemPage() {
             onClick={() => setStep("ticket")}
             className="mt-10 h-28 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-4xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98]"
           >
-            Confirmar chegada
+            Confirmar
+          </button>
+        </div>
+      </TotemLayout>
+    );
+  }
+
+  // ---------- CONFIRM CONVÊNIO ----------
+  if (step === "confirmConvenio") {
+    return (
+      <TotemLayout onBack={() => setStep("convenio")}>
+        <div className="flex w-full flex-col">
+          <h1 className="text-5xl font-bold text-foreground">
+            Confirme seus dados
+          </h1>
+          <p className="mt-3 text-2xl text-muted-foreground">
+            Verifique se as informações estão corretas
+          </p>
+
+          <div className="mt-10 space-y-5">
+            <InfoRow icon={<User />} label="Paciente" value="Maria Silva Santos" />
+            <InfoRow
+              icon={<IdCard />}
+              label="Número do cartão do convênio"
+              value={formatConvenioDisplay(convenio)}
+            />
+            <InfoRow
+              icon={<Clock />}
+              label="Consulta agendada"
+              value="14:30 — Dr. Carlos Mendes"
+              accent
+            />
+            <InfoRow icon={<AlertCircle />} label="Especialidade" value="Cardiologia" />
+          </div>
+
+          <button
+            onClick={() => setStep("ticket")}
+            className="mt-10 h-28 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-4xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98]"
+          >
+            Confirmar
           </button>
         </div>
       </TotemLayout>
