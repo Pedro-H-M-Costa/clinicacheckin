@@ -86,7 +86,7 @@ function TotemPage() {
               title="Cartão do Convênio"
               subtitle="Digite os 11 números do seu documento"
               icon={<IdCard className="h-14 w-14" />}
-              onClick={() => setStep("cpf")}
+              onClick={() => setStep("convenio")}
             />
             <BigButton
               variant="secondary"
