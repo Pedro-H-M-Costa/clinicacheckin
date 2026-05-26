@@ -19,15 +19,17 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Step = "welcome" | "method" | "cpf" | "confirm" | "ticket" | "notFound";
+type Step = "welcome" | "method" | "cpf" | "convenio" | "confirm" | "ticket" | "notFound";
 
 function TotemPage() {
   const [step, setStep] = useState<Step>("welcome");
   const [cpf, setCpf] = useState("");
+  const [convenio, setConvenio] = useState("");
 
   const reset = () => {
     setStep("welcome");
     setCpf("");
+    setConvenio("");
   };
 
   const formatCpf = (v: string) =>
@@ -84,7 +86,7 @@ function TotemPage() {
               title="Cartão do Convênio"
               subtitle="Digite os 11 números do seu documento"
               icon={<IdCard className="h-14 w-14" />}
-              onClick={() => setStep("cpf")}
+              onClick={() => setStep("convenio")}
             />
             <BigButton
               variant="secondary"
@@ -99,8 +101,8 @@ function TotemPage() {
     );
   }
 
-  // ---------- CPF ----------
-  if (step === "cpf") {
+  // ---------- CONVÊNIO ----------
+  if (step === "convenio") {
     return (
       <TotemLayout onBack={() => setStep("method")}>
         <div className="flex w-full flex-col items-center">
@@ -113,11 +115,47 @@ function TotemPage() {
 
           <div className="my-10 w-full rounded-3xl border-2 border-primary/30 bg-card px-10 py-8 text-center shadow-[var(--shadow-card)]">
             <p className="font-mono text-6xl font-bold tracking-wider text-primary tabular-nums">
-              {formatCpf(cpf)}
+              {convenio.padEnd(15, "•").slice(0, 15)}
             </p>
           </div>
 
-          <Numpad value={cpf} onChange={setCpf} maxLength={15} />
+          <Numpad value={convenio} onChange={setConvenio} maxLength={15} />
+
+          <button
+            disabled={convenio.length < 11}
+            onClick={() => setStep(convenio === "11111111111" ? "notFound" : "confirm")}
+            className="mt-8 h-24 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-3xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
+          >
+            Confirmar
+          </button>
+        </div>
+      </TotemLayout>
+    );
+  }
+
+  // ---------- CPF ----------
+  if (step === "cpf") {
+    const formatCpfMask = (v: string) => {
+      const padded = v.padEnd(11, "•").slice(0, 11);
+      return `${padded.slice(0, 3)}.${padded.slice(3, 6)}.${padded.slice(6, 9)}-${padded.slice(9, 11)}`;
+    };
+    return (
+      <TotemLayout onBack={() => setStep("method")}>
+        <div className="flex w-full flex-col items-center">
+          <h1 className="text-5xl font-bold text-foreground text-center">
+            Digite seu CPF
+          </h1>
+          <p className="mt-3 text-2xl text-muted-foreground">
+            Apenas os números, sem pontos ou traço
+          </p>
+
+          <div className="my-10 w-full rounded-3xl border-2 border-primary/30 bg-card px-10 py-8 text-center shadow-[var(--shadow-card)]">
+            <p className="font-mono text-6xl font-bold tracking-wider text-primary tabular-nums">
+              {formatCpfMask(cpf)}
+            </p>
+          </div>
+
+          <Numpad value={cpf} onChange={setCpf} maxLength={11} />
 
           <button
             disabled={cpf.length < 11}
