@@ -19,15 +19,17 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Step = "welcome" | "method" | "cpf" | "confirm" | "ticket" | "notFound";
+type Step = "welcome" | "method" | "cpf" | "convenio" | "confirm" | "ticket" | "notFound";
 
 function TotemPage() {
   const [step, setStep] = useState<Step>("welcome");
   const [cpf, setCpf] = useState("");
+  const [convenio, setConvenio] = useState("");
 
   const reset = () => {
     setStep("welcome");
     setCpf("");
+    setConvenio("");
   };
 
   const formatCpf = (v: string) =>
