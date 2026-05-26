@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Step = "welcome" | "method" | "cpf" | "convenio" | "confirm" | "ticket" | "notFound";
+type Step = "welcome" | "method" | "cpf" | "convenio" | "confirmCpf" | "confirmConvenio" | "ticket" | "notFound";
 
 function TotemPage() {
   const [step, setStep] = useState<Step>("welcome");
@@ -32,10 +32,15 @@ function TotemPage() {
     setConvenio("");
   };
 
-  const formatCpf = (v: string) =>
-    v
-      .padEnd(15, "•")
-      .slice(0, 15);
+  const formatCpfDisplay = (v: string) => {
+    const padded = v.padEnd(11, "•").slice(0, 11);
+    return `${padded.slice(0, 3)}.${padded.slice(3, 6)}.${padded.slice(6, 9)}-${padded.slice(9, 11)}`;
+  };
+
+  const formatConvenioDisplay = (v: string) => {
+    const padded = v.padEnd(16, "•").slice(0, 16);
+    return `${padded.slice(0, 4)} ${padded.slice(4, 8)} ${padded.slice(8, 12)} ${padded.slice(12, 16)}`;
+  };
 
   // ---------- WELCOME ----------
   if (step === "welcome") {
