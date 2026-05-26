@@ -32,9 +32,8 @@ function TotemPage() {
 
   const formatCpf = (v: string) =>
     v
-      .padEnd(11, "•")
-      .slice(0, 11)
-      .replace(/(.{3})(.{3})(.{3})(.{2})/, "$1.$2.$3-$4");
+      .padEnd(15, "•")
+      .slice(0, 15);
 
   // ---------- WELCOME ----------
   if (step === "welcome") {
@@ -106,10 +105,10 @@ function TotemPage() {
       <TotemLayout onBack={() => setStep("method")}>
         <div className="flex w-full flex-col items-center">
           <h1 className="text-5xl font-bold text-foreground text-center">
-            Digite seu CPF
+            Digite o número do seu cartão de convênio
           </h1>
           <p className="mt-3 text-2xl text-muted-foreground">
-            Apenas os números, sem pontos ou traço
+            {"\u200B"}
           </p>
 
           <div className="my-10 w-full rounded-3xl border-2 border-primary/30 bg-card px-10 py-8 text-center shadow-[var(--shadow-card)]">
@@ -121,7 +120,7 @@ function TotemPage() {
           <Numpad value={cpf} onChange={setCpf} />
 
           <button
-            disabled={cpf.length !== 11}
+            disabled={cpf.length < 11}
             onClick={() => setStep(cpf === "11111111111" ? "notFound" : "confirm")}
             className="mt-8 h-24 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-3xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
           >
