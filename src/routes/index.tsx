@@ -83,14 +83,14 @@ function TotemPage() {
           <div className="mt-12 flex w-full flex-col gap-6">
             <BigButton
               title="CPF"
-              subtitle="Digite os 11 números do seu documento"
+              subtitle="Aproxime seu cartão do convênio ou digite seu número"
               icon={<IdCard className="h-14 w-14" />}
               onClick={() => setStep("cpf")}
             />
             <BigButton
               variant="secondary"
-              title="Cartão da clínica"
-              subtitle="Aproxime seu cartão do leitor abaixo"
+              title="Cartão do Convênio"
+              subtitle="Digite os 11 números do seu documento"
               icon={<Fingerprint className="h-14 w-14" />}
               onClick={() => setStep("cpf")}
             />
