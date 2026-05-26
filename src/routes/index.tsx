@@ -120,7 +120,7 @@ function TotemPage() {
 
           <div className="my-10 w-full rounded-3xl border-2 border-primary/30 bg-card px-10 py-8 text-center shadow-[var(--shadow-card)]">
             <p className="font-mono text-6xl font-bold tracking-wider text-primary tabular-nums">
-              {convenio.padEnd(15, "•").slice(0, 15)}
+              {formatConvenioDisplay(convenio)}
             </p>
           </div>
 
