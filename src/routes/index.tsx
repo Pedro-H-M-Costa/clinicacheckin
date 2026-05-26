@@ -117,7 +117,7 @@ function TotemPage() {
             </p>
           </div>
 
-          <Numpad value={cpf} onChange={setCpf} />
+          <Numpad value={cpf} onChange={setCpf} maxLength={15} />
 
           <button
             disabled={cpf.length < 11}
