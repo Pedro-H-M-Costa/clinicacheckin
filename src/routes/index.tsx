@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Fingerprint, IdCard, CheckCircle2, Clock, User, AlertCircle, Check, Smile, X, Phone, Calendar, SearchX } from "lucide-react";
+import { Fingerprint, IdCard, CheckCircle2, Clock, User, AlertCircle, Smile, Phone, Calendar, SearchX } from "lucide-react";
 import { TotemLayout } from "@/components/totem/TotemLayout";
 import { BigButton } from "@/components/totem/BigButton";
 import { Numpad } from "@/components/totem/Numpad";
+import { adicionarPaciente, type Prioridade } from "@/lib/queue-store";
 
 export const Route = createFileRoute("/")({
   component: TotemPage,
@@ -19,17 +20,106 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Step = "welcome" | "method" | "cpf" | "convenio" | "confirmCpf" | "confirmConvenio" | "ticket" | "notFound";
+type Step =
+  | "welcome"
+  | "method"
+  | "cpf"
+  | "convenio"
+  | "confirmCpf"
+  | "confirmConvenio"
+  | "ticket"
+  | "notFound"
+  | "outraData";
+
+interface PatientRecord {
+  nome: string;
+  horario_agendado: string;
+  horario_chegada: string;
+  prioridade: Prioridade;
+  especialidade: string;
+  medico: string;
+}
+
+interface LookupEntry {
+  cpf: string; // 11 digits
+  convenio: string; // 16 digits
+  patient: PatientRecord | "otherDate";
+}
+
+const LOOKUP: LookupEntry[] = [
+  {
+    cpf: "22222222222",
+    convenio: "2222222222222222",
+    patient: {
+      nome: "Maria da Silva",
+      horario_agendado: "14:30",
+      horario_chegada: "14:18",
+      prioridade: "normal",
+      especialidade: "Clínica Geral",
+      medico: "Dra. Helena Ribeiro",
+    },
+  },
+  {
+    cpf: "33333333333",
+    convenio: "3333333333333333",
+    patient: {
+      nome: "Jorge dos Santos",
+      horario_agendado: "14:45",
+      horario_chegada: "14:28",
+      prioridade: "idoso",
+      especialidade: "Geriatria",
+      medico: "Dr. Paulo Andrade",
+    },
+  },
+  {
+    cpf: "44444444444",
+    convenio: "4444444444444444",
+    patient: "otherDate",
+  },
+  {
+    cpf: "55555555555",
+    convenio: "5555555555555555",
+    patient: {
+      nome: "Miguel Batista",
+      horario_agendado: "14:00",
+      horario_chegada: "14:30",
+      prioridade: "deficiencia",
+      especialidade: "Ortopedia",
+      medico: "Dr. Rafael Lima",
+    },
+  },
+  {
+    cpf: "66666666666",
+    convenio: "6666666666666666",
+    patient: {
+      nome: "Abner Amorim",
+      horario_agendado: "15:00",
+      horario_chegada: "14:57",
+      prioridade: "normal",
+      especialidade: "Cardiologia",
+      medico: "Dr. Carlos Mendes",
+    },
+  },
+];
+
+function lookupByCpf(cpf: string): PatientRecord | "otherDate" | null {
+  return LOOKUP.find((e) => e.cpf === cpf)?.patient ?? null;
+}
+function lookupByConvenio(c: string): PatientRecord | "otherDate" | null {
+  return LOOKUP.find((e) => e.convenio === c)?.patient ?? null;
+}
 
 function TotemPage() {
   const [step, setStep] = useState<Step>("welcome");
   const [cpf, setCpf] = useState("");
   const [convenio, setConvenio] = useState("");
+  const [current, setCurrent] = useState<PatientRecord | null>(null);
 
   const reset = () => {
     setStep("welcome");
     setCpf("");
     setConvenio("");
+    setCurrent(null);
   };
 
   const formatCpfDisplay = (v: string) => {
@@ -40,6 +130,36 @@ function TotemPage() {
   const formatConvenioDisplay = (v: string) => {
     const padded = v.padEnd(16, "•").slice(0, 16);
     return `${padded.slice(0, 4)} ${padded.slice(4, 8)} ${padded.slice(8, 12)} ${padded.slice(12, 16)}`;
+  };
+
+  const handleCpfConfirm = () => {
+    const result = lookupByCpf(cpf);
+    if (result === null) return setStep("notFound");
+    if (result === "otherDate") return setStep("outraData");
+    setCurrent(result);
+    setStep("confirmCpf");
+  };
+
+  const handleConvenioConfirm = () => {
+    const result = lookupByConvenio(convenio);
+    if (result === null) return setStep("notFound");
+    if (result === "otherDate") return setStep("outraData");
+    setCurrent(result);
+    setStep("confirmConvenio");
+  };
+
+  const finalizeCheckin = () => {
+    if (current) {
+      adicionarPaciente({
+        nome: current.nome,
+        horario_agendado: current.horario_agendado,
+        horario_chegada: current.horario_chegada,
+        prioridade: current.prioridade,
+        tipo_consulta: "primeira_vez",
+        risco_no_show: 0.1,
+      });
+    }
+    setStep("ticket");
   };
 
   // ---------- WELCOME ----------
@@ -89,14 +209,14 @@ function TotemPage() {
           <div className="mt-12 flex w-full flex-col gap-6">
             <BigButton
               title="Cartão do Convênio"
-              subtitle="Digite os 11 números do seu documento"
+              subtitle="Digite os 16 números do seu cartão"
               icon={<IdCard className="h-14 w-14" />}
               onClick={() => setStep("convenio")}
             />
             <BigButton
               variant="secondary"
               title="CPF"
-              subtitle="Aproxime seu cartão do convênio ou digite seu número"
+              subtitle="Digite os 11 números do seu CPF"
               icon={<Fingerprint className="h-14 w-14" />}
               onClick={() => setStep("cpf")}
             />
@@ -114,9 +234,7 @@ function TotemPage() {
           <h1 className="text-5xl font-bold text-foreground text-center">
             Digite o número do seu cartão de convênio
           </h1>
-          <p className="mt-3 text-2xl text-muted-foreground">
-            {"\u200B"}
-          </p>
+          <p className="mt-3 text-2xl text-muted-foreground">{"\u200B"}</p>
 
           <div className="my-10 w-full rounded-3xl border-2 border-primary/30 bg-card px-10 py-8 text-center shadow-[var(--shadow-card)]">
             <p className="font-mono text-6xl font-bold tracking-wider text-primary tabular-nums">
@@ -128,7 +246,7 @@ function TotemPage() {
 
           <button
             disabled={convenio.length < 16}
-            onClick={() => setStep(convenio === "1111111111111111" ? "notFound" : "confirmConvenio")}
+            onClick={handleConvenioConfirm}
             className="mt-8 h-24 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-3xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
           >
             Confirmar
@@ -160,7 +278,7 @@ function TotemPage() {
 
           <button
             disabled={cpf.length < 11}
-            onClick={() => setStep(cpf === "11111111111" ? "notFound" : "confirmCpf")}
+            onClick={handleCpfConfirm}
             className="mt-8 h-24 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-3xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
           >
             Confirmar
@@ -171,31 +289,29 @@ function TotemPage() {
   }
 
   // ---------- CONFIRM CPF ----------
-  if (step === "confirmCpf") {
+  if (step === "confirmCpf" && current) {
     return (
       <TotemLayout onBack={() => setStep("cpf")}>
         <div className="flex w-full flex-col">
-          <h1 className="text-5xl font-bold text-foreground">
-            Confirme seus dados
-          </h1>
+          <h1 className="text-5xl font-bold text-foreground">Confirme seus dados</h1>
           <p className="mt-3 text-2xl text-muted-foreground">
             Verifique se as informações estão corretas
           </p>
 
           <div className="mt-10 space-y-5">
-            <InfoRow icon={<User />} label="Paciente" value="Maria Silva Santos" />
+            <InfoRow icon={<User />} label="Paciente" value={current.nome} />
             <InfoRow icon={<IdCard />} label="CPF" value={formatCpfDisplay(cpf)} />
             <InfoRow
               icon={<Clock />}
               label="Consulta agendada"
-              value="14:30 — Dr. Carlos Mendes"
+              value={`${current.horario_agendado} — ${current.medico}`}
               accent
             />
-            <InfoRow icon={<AlertCircle />} label="Especialidade" value="Cardiologia" />
+            <InfoRow icon={<AlertCircle />} label="Especialidade" value={current.especialidade} />
           </div>
 
           <button
-            onClick={() => setStep("ticket")}
+            onClick={finalizeCheckin}
             className="mt-10 h-28 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-4xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98]"
           >
             Confirmar
@@ -206,19 +322,17 @@ function TotemPage() {
   }
 
   // ---------- CONFIRM CONVÊNIO ----------
-  if (step === "confirmConvenio") {
+  if (step === "confirmConvenio" && current) {
     return (
       <TotemLayout onBack={() => setStep("convenio")}>
         <div className="flex w-full flex-col">
-          <h1 className="text-5xl font-bold text-foreground">
-            Confirme seus dados
-          </h1>
+          <h1 className="text-5xl font-bold text-foreground">Confirme seus dados</h1>
           <p className="mt-3 text-2xl text-muted-foreground">
             Verifique se as informações estão corretas
           </p>
 
           <div className="mt-10 space-y-5">
-            <InfoRow icon={<User />} label="Paciente" value="Maria Silva Santos" />
+            <InfoRow icon={<User />} label="Paciente" value={current.nome} />
             <InfoRow
               icon={<IdCard />}
               label="Número do cartão do convênio"
@@ -227,17 +341,60 @@ function TotemPage() {
             <InfoRow
               icon={<Clock />}
               label="Consulta agendada"
-              value="14:30 — Dr. Carlos Mendes"
+              value={`${current.horario_agendado} — ${current.medico}`}
               accent
             />
-            <InfoRow icon={<AlertCircle />} label="Especialidade" value="Cardiologia" />
+            <InfoRow icon={<AlertCircle />} label="Especialidade" value={current.especialidade} />
           </div>
 
           <button
-            onClick={() => setStep("ticket")}
+            onClick={finalizeCheckin}
             className="mt-10 h-28 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-4xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98]"
           >
             Confirmar
+          </button>
+        </div>
+      </TotemLayout>
+    );
+  }
+
+  // ---------- OUTRA DATA ----------
+  if (step === "outraData") {
+    return (
+      <TotemLayout onBack={reset} backLabel="Voltar ao início">
+        <div className="flex w-full flex-col items-center text-center">
+          <div className="mb-8 flex h-40 w-40 items-center justify-center rounded-full bg-accent">
+            <div className="flex h-28 w-28 items-center justify-center rounded-full bg-primary shadow-[var(--shadow-touch)]">
+              <Calendar className="h-16 w-16 text-primary-foreground" strokeWidth={2.5} />
+            </div>
+          </div>
+
+          <h1 className="text-5xl font-bold text-foreground">
+            Agendamento em outra data
+          </h1>
+          <p className="mt-4 max-w-xl text-2xl text-muted-foreground">
+            Localizamos seu cadastro, mas sua consulta não está marcada para hoje.
+          </p>
+
+          <div className="mt-10 w-full rounded-3xl border border-border bg-card p-8 text-left shadow-[var(--shadow-card)]">
+            <p className="text-lg font-semibold uppercase tracking-wider text-muted-foreground">
+              O que fazer?
+            </p>
+            <div className="mt-6 flex items-start gap-5">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent text-primary">
+                <Phone className="h-7 w-7" />
+              </div>
+              <p className="pt-2 text-2xl text-foreground">
+                Confirme a data do seu agendamento na recepção ou retorne no dia correto.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={reset}
+            className="mt-10 h-24 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-3xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98]"
+          >
+            Concluir
           </button>
         </div>
       </TotemLayout>
@@ -259,39 +416,33 @@ function TotemPage() {
             Agendamento não encontrado
           </h1>
           <p className="mt-4 max-w-xl text-2xl text-muted-foreground">
-            Não encontramos um agendamento para o CPF informado.
+            Não encontramos um agendamento com os dados informados.
           </p>
 
           <div className="mt-10 w-full rounded-3xl border border-border bg-card p-8 text-left shadow-[var(--shadow-card)]">
             <p className="text-lg font-semibold uppercase tracking-wider text-muted-foreground">
               O que fazer?
             </p>
-            <div className="mt-6 space-y-5">
-              <div className="flex items-start gap-5">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent text-primary">
-                  <Phone className="h-7 w-7" />
-                </div>
-                <p className="pt-2 text-2xl text-foreground">
-                  Dirija-se à recepção para que possamos verificar sua situação.
-                </p>
+            <div className="mt-6 flex items-start gap-5">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent text-primary">
+                <Phone className="h-7 w-7" />
               </div>
+              <p className="pt-2 text-2xl text-foreground">
+                Dirija-se à recepção para que possamos verificar sua situação.
+              </p>
             </div>
           </div>
 
           <button
-            onClick={() => {
-              setCpf("");
-              setStep("cpf");
-            }}
+            onClick={reset}
             className="mt-10 h-24 w-full rounded-3xl bg-[image:var(--gradient-primary)] text-3xl font-bold text-primary-foreground shadow-[var(--shadow-touch)] transition-all active:scale-[0.98]"
           >
-            Tentar novamente
+            Voltar ao início
           </button>
         </div>
       </TotemLayout>
     );
   }
-
 
   // ---------- TICKET ----------
   return (
@@ -314,8 +465,8 @@ function TotemPage() {
         </div>
 
         <div className="mt-8 grid w-full grid-cols-2 gap-5">
-          <Stat label="Posição na fila" value="3º" />
-          <Stat label="Tempo estimado" value="~12 min" highlight />
+          <Stat label="Paciente" value={current?.nome ?? "—"} />
+          <Stat label="Consulta" value={current?.horario_agendado ?? "—"} highlight />
         </div>
 
         <button
