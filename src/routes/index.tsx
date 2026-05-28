@@ -106,7 +106,6 @@ const LOOKUP: LookupEntry[] = [
     },
   },
 ];
-];
 
 function lookupByCpf(cpf: string): PatientRecord | "otherDate" | null {
   return LOOKUP.find((e) => e.cpf === cpf)?.patient ?? null;
@@ -153,19 +152,12 @@ function TotemPage() {
     setCurrent(result);
     setStep("confirmConvenio");
   };
-
   const finalizeCheckin = () => {
     if (current) {
-      adicionarPaciente({
-        nome: current.nome,
-        horario_agendado: current.horario_agendado,
-        horario_chegada: current.horario_chegada,
-        prioridade: current.prioridade,
-        tipo_consulta: "primeira_vez",
-        risco_no_show: 0.1,
-      });
+      checkInPaciente(current.id);
     }
     setStep("ticket");
+  };
   };
 
   // ---------- WELCOME ----------
