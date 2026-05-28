@@ -101,36 +101,39 @@ const mockInicial: Paciente[] = [
     tipo_consulta: "retorno",
     risco_no_show: 0.1,
   },
+];
+
+let pacientes: Paciente[] = [
   {
-    id: "2",
-    nome: "João Pereira",
-    horario_agendado: "09:15",
-    horario_chegada: "09:20",
-    prioridade: "normal",
-    tipo_consulta: "primeira_vez",
-    risco_no_show: 0.2,
+    id: "p1", nome: "Carlos Souza", horario_agendado: "14:00", horario_chegada: "14:30",
+    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
   },
   {
-    id: "3",
-    nome: "Ana Costa",
-    horario_agendado: "09:30",
-    horario_chegada: "09:25",
-    prioridade: "gestante",
-    tipo_consulta: "exame",
-    risco_no_show: 0.05,
+    id: "p2", nome: "Maria Lima", horario_agendado: "14:30", horario_chegada: "14:25",
+    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
   },
   {
-    id: "4",
-    nome: "Carlos Souza",
-    horario_agendado: "09:00",
-    horario_chegada: null,
-    prioridade: "normal",
-    tipo_consulta: "procedimento",
-    risco_no_show: 0.8,
+    id: "p3", nome: "João Ferreira", horario_agendado: "14:45", horario_chegada: "14:40",
+    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+  },
+  {
+    id: "p4", nome: "Ana Beatriz", horario_agendado: "15:00", horario_chegada: "14:55",
+    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+  },
+  {
+    id: "p5", nome: "Pedro Monteiro", horario_agendado: "15:00", horario_chegada: "14:58",
+    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+  },
+  {
+    id: "p6", nome: "Fernanda Costa", horario_agendado: "15:15", horario_chegada: "15:10",
+    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+  },
+  {
+    id: "p7", nome: "Lucas Andrade", horario_agendado: "15:30", horario_chegada: "15:25",
+    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
   },
 ];
 
-let pacientes: Paciente[] = [...mockInicial];
 const listeners = new Set<() => void>();
 
 function emit() {
@@ -157,6 +160,11 @@ export function usePacientes(): Paciente[] {
     () => pacientes,
   );
 }
+
+if (typeof window !== "undefined") {
+  setInterval(() => emit(), 30_000);
+}
+
 
 // Tick a cada minuto para recalcular tempo de espera
 if (typeof window !== "undefined") {

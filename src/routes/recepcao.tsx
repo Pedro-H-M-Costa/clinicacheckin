@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { Loader2, Sparkles, AlertTriangle, Clock, Lightbulb } from "lucide-react";
 import {
   calcularFila,
   calcularHorarioPrevisto,
@@ -7,6 +9,7 @@ import {
   removerPaciente,
   type Prioridade,
 } from "@/lib/queue-store";
+import { aiDashboard } from "@/lib/ai-dashboard.functions";
 
 export const Route = createFileRoute("/recepcao")({
   component: RecepcaoPage,
@@ -33,10 +36,48 @@ const prioridadeBadge: Record<Prioridade, string> = {
   deficiencia: "bg-accent text-accent-foreground",
   urgente: "bg-destructive text-destructive-foreground",
 };
-
 function RecepcaoPage() {
   const pacientes = usePacientes();
   const fila = useMemo(() => calcularFila(pacientes), [pacientes]);
+  const callAi = useServerFn(aiDashboard);
+  const [ai, setAi] = useState<{
+    pico_esperado: string;
+    sugestao: string;
+    alerta: boolean;
+    motivo_alerta: string;
+  } | null>(null);
+  const [aiLoading, setAiLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    const fetchAi = async () => {
+      setAiLoading(true);
+      try {
+        const result = await callAi({
+          data: {
+            pacientes: pacientes.map((p) => ({
+              nome: p.nome,
+              horario_agendado: p.horario_agendado,
+              horario_chegada: p.horario_chegada,
+            })),
+          },
+        });
+        if (!cancelled) setAi(result);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (!cancelled) setAiLoading(false);
+      }
+    };
+    fetchAi();
+    const id = setInterval(fetchAi, 30_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, [callAi, pacientes]);
+
+
 
   return (
     <div className="min-h-screen bg-background p-8">
@@ -57,6 +98,41 @@ function RecepcaoPage() {
             </Link>
           </div>
         </header>
+
+        <div className="mb-6 rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
+          <div className="mb-4 flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-bold text-foreground">Insights da fila (IA)</h2>
+            {aiLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin text-muted-foreground" />}
+          </div>
+          {ai?.alerta && (
+            <div className="mb-4 flex items-start gap-3 rounded-xl bg-destructive px-4 py-3 text-destructive-foreground">
+              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+              <p className="text-sm font-semibold">{ai.motivo_alerta}</p>
+            </div>
+          )}
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="flex items-start gap-3 rounded-xl border border-border bg-muted/40 p-4">
+              <Clock className="mt-0.5 h-5 w-5 text-primary" />
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">Pico esperado</p>
+                <p className="mt-1 text-base font-semibold text-foreground">
+                  {ai?.pico_esperado ?? (aiLoading ? "Carregando…" : "—")}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 rounded-xl border border-border bg-muted/40 p-4">
+              <Lightbulb className="mt-0.5 h-5 w-5 text-primary" />
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">Sugestão</p>
+                <p className="mt-1 text-base font-semibold text-foreground">
+                  {ai?.sugestao ?? (aiLoading ? "Carregando…" : "—")}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
         <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
           <table className="w-full text-left">
