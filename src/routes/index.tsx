@@ -4,9 +4,9 @@ import { Fingerprint, IdCard, CheckCircle2, Clock, User, AlertCircle, Smile, Pho
 import { TotemLayout } from "@/components/totem/TotemLayout";
 import { BigButton } from "@/components/totem/BigButton";
 import { Numpad } from "@/components/totem/Numpad";
-import { adicionarPaciente, type Prioridade } from "@/lib/queue-store";
-
 import { checkInPaciente, type Prioridade } from "@/lib/queue-store";
+
+export const Route = createFileRoute("/")({
   component: TotemPage,
   head: () => ({
     meta: [
