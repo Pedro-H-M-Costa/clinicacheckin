@@ -6,7 +6,7 @@ import { BigButton } from "@/components/totem/BigButton";
 import { Numpad } from "@/components/totem/Numpad";
 import { adicionarPaciente, type Prioridade } from "@/lib/queue-store";
 
-export const Route = createFileRoute("/")({
+import { checkInPaciente, type Prioridade } from "@/lib/queue-store";
   component: TotemPage,
   head: () => ({
     meta: [
