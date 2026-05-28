@@ -36,9 +36,47 @@ const prioridadeBadge: Record<Prioridade, string> = {
   deficiencia: "bg-accent text-accent-foreground",
   urgente: "bg-destructive text-destructive-foreground",
 };
-
 function RecepcaoPage() {
   const pacientes = usePacientes();
+  const fila = useMemo(() => calcularFila(pacientes), [pacientes]);
+  const callAi = useServerFn(aiDashboard);
+  const [ai, setAi] = useState<{
+    pico_esperado: string;
+    sugestao: string;
+    alerta: boolean;
+    motivo_alerta: string;
+  } | null>(null);
+  const [aiLoading, setAiLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    const fetchAi = async () => {
+      setAiLoading(true);
+      try {
+        const result = await callAi({
+          data: {
+            pacientes: pacientes.map((p) => ({
+              nome: p.nome,
+              horario_agendado: p.horario_agendado,
+              horario_chegada: p.horario_chegada,
+            })),
+          },
+        });
+        if (!cancelled) setAi(result);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (!cancelled) setAiLoading(false);
+      }
+    };
+    fetchAi();
+    const id = setInterval(fetchAi, 30_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, [callAi, pacientes]);
+
   const fila = useMemo(() => calcularFila(pacientes), [pacientes]);
 
   return (
