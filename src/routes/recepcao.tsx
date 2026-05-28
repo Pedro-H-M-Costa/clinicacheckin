@@ -77,7 +77,7 @@ function RecepcaoPage() {
     };
   }, [callAi, pacientes]);
 
-  const fila = useMemo(() => calcularFila(pacientes), [pacientes]);
+
 
   return (
     <div className="min-h-screen bg-background p-8">
