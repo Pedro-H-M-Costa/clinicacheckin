@@ -4,7 +4,7 @@ import { Fingerprint, IdCard, CheckCircle2, Clock, User, AlertCircle, Smile, Pho
 import { TotemLayout } from "@/components/totem/TotemLayout";
 import { BigButton } from "@/components/totem/BigButton";
 import { Numpad } from "@/components/totem/Numpad";
-import { adicionarPaciente, type Prioridade } from "@/lib/queue-store";
+import { checkInPaciente, type Prioridade } from "@/lib/queue-store";
 
 export const Route = createFileRoute("/")({
   component: TotemPage,
@@ -32,6 +32,7 @@ type Step =
   | "outraData";
 
 interface PatientRecord {
+  id: string;
   nome: string;
   horario_agendado: string;
   horario_chegada: string;
@@ -51,6 +52,7 @@ const LOOKUP: LookupEntry[] = [
     cpf: "22222222222",
     convenio: "2222222222222222",
     patient: {
+      id: "lk-maria",
       nome: "Maria da Silva",
       horario_agendado: "14:30",
       horario_chegada: "14:18",
@@ -63,6 +65,7 @@ const LOOKUP: LookupEntry[] = [
     cpf: "33333333333",
     convenio: "3333333333333333",
     patient: {
+      id: "lk-jorge",
       nome: "Jorge dos Santos",
       horario_agendado: "14:45",
       horario_chegada: "14:28",
@@ -80,6 +83,7 @@ const LOOKUP: LookupEntry[] = [
     cpf: "55555555555",
     convenio: "5555555555555555",
     patient: {
+      id: "lk-miguel",
       nome: "Miguel Batista",
       horario_agendado: "14:00",
       horario_chegada: "14:30",
@@ -92,6 +96,7 @@ const LOOKUP: LookupEntry[] = [
     cpf: "66666666666",
     convenio: "6666666666666666",
     patient: {
+      id: "lk-abner",
       nome: "Abner Amorim",
       horario_agendado: "15:00",
       horario_chegada: "14:57",
@@ -147,19 +152,12 @@ function TotemPage() {
     setCurrent(result);
     setStep("confirmConvenio");
   };
-
   const finalizeCheckin = () => {
     if (current) {
-      adicionarPaciente({
-        nome: current.nome,
-        horario_agendado: current.horario_agendado,
-        horario_chegada: current.horario_chegada,
-        prioridade: current.prioridade,
-        tipo_consulta: "primeira_vez",
-        risco_no_show: 0.1,
-      });
+      checkInPaciente(current.id);
     }
     setStep("ticket");
+  };
   };
 
   // ---------- WELCOME ----------
