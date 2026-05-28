@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { Loader2, Sparkles, AlertTriangle, Clock, Lightbulb } from "lucide-react";
 import {
   calcularFila,
   calcularHorarioPrevisto,
@@ -7,6 +9,7 @@ import {
   removerPaciente,
   type Prioridade,
 } from "@/lib/queue-store";
+import { aiDashboard } from "@/lib/ai-dashboard.functions";
 
 export const Route = createFileRoute("/recepcao")({
   component: RecepcaoPage,
