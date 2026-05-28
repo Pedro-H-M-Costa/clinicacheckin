@@ -99,6 +99,41 @@ function RecepcaoPage() {
           </div>
         </header>
 
+        <div className="mb-6 rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
+          <div className="mb-4 flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-bold text-foreground">Insights da fila (IA)</h2>
+            {aiLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin text-muted-foreground" />}
+          </div>
+          {ai?.alerta && (
+            <div className="mb-4 flex items-start gap-3 rounded-xl bg-destructive px-4 py-3 text-destructive-foreground">
+              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+              <p className="text-sm font-semibold">{ai.motivo_alerta}</p>
+            </div>
+          )}
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="flex items-start gap-3 rounded-xl border border-border bg-muted/40 p-4">
+              <Clock className="mt-0.5 h-5 w-5 text-primary" />
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">Pico esperado</p>
+                <p className="mt-1 text-base font-semibold text-foreground">
+                  {ai?.pico_esperado ?? (aiLoading ? "Carregando…" : "—")}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 rounded-xl border border-border bg-muted/40 p-4">
+              <Lightbulb className="mt-0.5 h-5 w-5 text-primary" />
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">Sugestão</p>
+                <p className="mt-1 text-base font-semibold text-foreground">
+                  {ai?.sugestao ?? (aiLoading ? "Carregando…" : "—")}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
         <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
           <table className="w-full text-left">
             <thead className="bg-muted text-sm uppercase tracking-wider text-muted-foreground">
