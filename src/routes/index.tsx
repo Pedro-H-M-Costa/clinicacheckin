@@ -402,6 +402,56 @@ function TotemPage() {
     );
   }
 
+  // ---------- ATRASO SEVERO ----------
+  if (step === "atrasoSevero" && current) {
+    return (
+      <TotemLayout onBack={reset} backLabel="Cancelar operação">
+        <div className="flex w-full flex-col items-center text-center">
+          <div
+            className="mb-8 flex h-40 w-40 items-center justify-center rounded-full"
+            style={{ backgroundColor: "#F59E0B22" }}
+          >
+            <div
+              className="flex h-28 w-28 items-center justify-center rounded-full shadow-[var(--shadow-touch)]"
+              style={{ backgroundColor: "#F59E0B" }}
+            >
+              <AlarmClock className="h-16 w-16 text-white" strokeWidth={2.5} />
+            </div>
+          </div>
+
+          <h1 className="text-5xl font-bold text-foreground">Atraso Severo.</h1>
+          <p className="mt-4 max-w-xl text-2xl text-muted-foreground">
+            Seu agendamento era às {current.horario_agendado}. Sua chegada será registrada,
+            mas seu atendimento será feito como encaixe, sujeito a um tempo de espera maior.
+          </p>
+
+          <div className="mt-10 flex w-full flex-col gap-5">
+            <button
+              onClick={finalizeCheckin}
+              className="h-24 w-full rounded-3xl text-3xl font-bold text-white shadow-[var(--shadow-touch)] transition-all active:scale-[0.98]"
+              style={{ backgroundColor: "#F59E0B" }}
+            >
+              Estou ciente, quero aguardar o encaixe.
+            </button>
+            <button
+              onClick={reset}
+              className="h-24 w-full rounded-3xl border-2 border-border bg-card text-2xl font-semibold text-foreground active:scale-[0.98]"
+            >
+              Prefiro falar com a recepção.
+            </button>
+          </div>
+
+          <button
+            onClick={reset}
+            className="mt-8 text-xl font-medium text-muted-foreground underline underline-offset-4"
+          >
+            Cancelar operação
+          </button>
+        </div>
+      </TotemLayout>
+    );
+  }
+
   // ---------- NOT FOUND ----------
   if (step === "notFound") {
     return (
