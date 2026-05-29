@@ -143,6 +143,7 @@ function TotemPage() {
     if (result === null) return setStep("notFound");
     if (result === "otherDate") return setStep("outraData");
     setCurrent(result);
+    if (result.id === "lk-miguel") return setStep("atrasoSevero");
     setStep("confirmCpf");
   };
 
@@ -151,6 +152,7 @@ function TotemPage() {
     if (result === null) return setStep("notFound");
     if (result === "otherDate") return setStep("outraData");
     setCurrent(result);
+    if (result.id === "lk-miguel") return setStep("atrasoSevero");
     setStep("confirmConvenio");
   };
   const finalizeCheckin = () => {
@@ -159,7 +161,7 @@ function TotemPage() {
     }
     setStep("ticket");
   };
-  };
+
 
   // ---------- WELCOME ----------
   if (step === "welcome") {
