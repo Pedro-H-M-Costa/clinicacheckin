@@ -27,6 +27,7 @@ type Step =
   | "convenio"
   | "confirmCpf"
   | "confirmConvenio"
+  | "atrasoSevero"
   | "ticket"
   | "notFound"
   | "outraData";
