@@ -11,8 +11,6 @@ export interface Paciente {
   prioridade: Prioridade;
   tipo_consulta: TipoConsulta;
   risco_no_show: number; // 0..1
-  checked_in: boolean;
-  checkin_time: number | null; // epoch ms
 }
 
 export interface PacienteCalculado extends Paciente {
@@ -93,42 +91,47 @@ export function calcularHorarioPrevisto(fila: PacienteCalculado[], posicao: numb
 }
 
 // ---------- Store ----------
-const baseTime = Date.now() - 7 * 60_000;
+const mockInicial: Paciente[] = [
+  {
+    id: "1",
+    nome: "Maria Silva Santos",
+    horario_agendado: "09:00",
+    horario_chegada: "08:55",
+    prioridade: "idoso",
+    tipo_consulta: "retorno",
+    risco_no_show: 0.1,
+  },
+];
+
 let pacientes: Paciente[] = [
-  { id: "p1", nome: "Carlos Souza", horario_agendado: "14:00", horario_chegada: "14:30",
+  {
+    id: "p1", nome: "Carlos Souza", horario_agendado: "14:00", horario_chegada: "14:30",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: true, checkin_time: baseTime },
-  { id: "p2", nome: "Maria Lima", horario_agendado: "14:30", horario_chegada: "14:25",
+  },
+  {
+    id: "p2", nome: "Maria Lima", horario_agendado: "14:30", horario_chegada: "14:25",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: true, checkin_time: baseTime + 1_000 },
-  { id: "p3", nome: "João Ferreira", horario_agendado: "14:45", horario_chegada: "14:40",
+  },
+  {
+    id: "p3", nome: "João Ferreira", horario_agendado: "14:45", horario_chegada: "14:40",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: true, checkin_time: baseTime + 2_000 },
-  { id: "p4", nome: "Ana Beatriz", horario_agendado: "15:00", horario_chegada: "14:55",
+  },
+  {
+    id: "p4", nome: "Ana Beatriz", horario_agendado: "15:00", horario_chegada: "14:55",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: true, checkin_time: baseTime + 3_000 },
-  { id: "p5", nome: "Pedro Monteiro", horario_agendado: "15:00", horario_chegada: "14:58",
+  },
+  {
+    id: "p5", nome: "Pedro Monteiro", horario_agendado: "15:00", horario_chegada: "14:58",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: true, checkin_time: baseTime + 4_000 },
-  { id: "p6", nome: "Fernanda Costa", horario_agendado: "15:15", horario_chegada: "15:10",
+  },
+  {
+    id: "p6", nome: "Fernanda Costa", horario_agendado: "15:15", horario_chegada: "15:10",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: true, checkin_time: baseTime + 5_000 },
-  { id: "p7", nome: "Lucas Andrade", horario_agendado: "15:30", horario_chegada: "15:25",
+  },
+  {
+    id: "p7", nome: "Lucas Andrade", horario_agendado: "15:30", horario_chegada: "15:25",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: true, checkin_time: baseTime + 6_000 },
-  // Pré-cadastros de lookup (CPF/convênio) — aguardando check-in no totem
-  { id: "lk-maria", nome: "Maria da Silva", horario_agendado: "14:30", horario_chegada: "14:18",
-    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: false, checkin_time: null },
-  { id: "lk-jorge", nome: "Jorge dos Santos", horario_agendado: "14:45", horario_chegada: "14:28",
-    prioridade: "idoso", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: false, checkin_time: null },
-  { id: "lk-miguel", nome: "Miguel Batista", horario_agendado: "14:00", horario_chegada: "14:30",
-    prioridade: "deficiencia", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: false, checkin_time: null },
-  { id: "lk-abner", nome: "Abner Amorim", horario_agendado: "15:00", horario_chegada: "14:57",
-    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: false, checkin_time: null },
+  },
 ];
 
 const listeners = new Set<() => void>();
@@ -137,15 +140,8 @@ function emit() {
   listeners.forEach((l) => l());
 }
 
-export function adicionarPaciente(p: Omit<Paciente, "id" | "checked_in" | "checkin_time">) {
-  pacientes = [...pacientes, { ...p, id: crypto.randomUUID(), checked_in: true, checkin_time: Date.now() }];
-  emit();
-}
-
-export function checkInPaciente(id: string) {
-  pacientes = pacientes.map((p) =>
-    p.id === id ? { ...p, checked_in: true, checkin_time: Date.now() } : p,
-  );
+export function adicionarPaciente(p: Omit<Paciente, "id">) {
+  pacientes = [...pacientes, { ...p, id: crypto.randomUUID() }];
   emit();
 }
 
@@ -169,3 +165,8 @@ if (typeof window !== "undefined") {
   setInterval(() => emit(), 30_000);
 }
 
+
+// Tick a cada minuto para recalcular tempo de espera
+if (typeof window !== "undefined") {
+  setInterval(() => emit(), 30_000);
+}
