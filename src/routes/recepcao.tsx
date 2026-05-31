@@ -91,7 +91,7 @@ function RecepcaoPage() {
           </div>
           <div className="flex gap-3">
             <Link
-              to="/totem"
+              to="/"
               className="rounded-xl border-2 border-border bg-card px-6 py-3 text-lg font-semibold text-foreground hover:bg-accent"
             >
               Ir para Check-in
