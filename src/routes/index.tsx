@@ -171,7 +171,7 @@ function TotemPage() {
         horario_chegada: current.horario_chegada,
         prioridade: current.prioridade,
         tipo_consulta: "primeira_vez",
-        risco_no_show: 0.1,
+        risco_no_show: current.risco_no_show ?? 0.1,
       });
     }
     setStep("ticket");
