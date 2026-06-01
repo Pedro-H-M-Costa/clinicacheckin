@@ -11,6 +11,8 @@ export interface Paciente {
   prioridade: Prioridade;
   tipo_consulta: TipoConsulta;
   risco_no_show: number; // 0..1
+  checked_in: boolean;
+  checkin_time: number | null; // epoch ms
 }
 
 export interface PacienteCalculado extends Paciente {
@@ -100,6 +102,8 @@ const mockInicial: Paciente[] = [
     prioridade: "idoso",
     tipo_consulta: "retorno",
     risco_no_show: 0.1,
+    checked_in: true,
+    checkin_time: Date.now(),
   },
 ];
 
@@ -107,22 +111,27 @@ let pacientes: Paciente[] = [
   {
     id: "p-maria", nome: "Maria da Silva", horario_agendado: "14:30", horario_chegada: "14:18",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+    checked_in: true, checkin_time: Date.now(),
   },
   {
     id: "p-jorge", nome: "Jorge dos Santos", horario_agendado: "14:45", horario_chegada: "14:28",
     prioridade: "idoso", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+    checked_in: true, checkin_time: Date.now(),
   },
   {
     id: "p-miguel", nome: "Miguel Batista", horario_agendado: "14:00", horario_chegada: "14:30",
     prioridade: "deficiencia", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+    checked_in: true, checkin_time: Date.now(),
   },
   {
     id: "p-abner", nome: "Abner Amorim", horario_agendado: "15:00", horario_chegada: "14:57",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+    checked_in: true, checkin_time: Date.now(),
   },
   {
     id: "p-rafael", nome: "Rafael Cardoso", horario_agendado: "14:50", horario_chegada: "14:52",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.85,
+    checked_in: true, checkin_time: Date.now(),
   },
 ];
 
@@ -133,10 +142,18 @@ function emit() {
   listeners.forEach((l) => l());
 }
 
-export function adicionarPaciente(p: Omit<Paciente, "id">) {
-  pacientes = [...pacientes, { ...p, id: crypto.randomUUID() }];
+export function adicionarPaciente(p: Omit<Paciente, "id" | "checked_in" | "checkin_time">) {
+  pacientes = [...pacientes, { ...p, id: crypto.randomUUID(), checked_in: true, checkin_time: Date.now() }];
   emit();
 }
+
+export function checkInPaciente(id: string) {
+  pacientes = pacientes.map((p) =>
+    p.id === id ? { ...p, checked_in: true, checkin_time: Date.now() } : p,
+  );
+  emit();
+}
+
 
 export function removerPaciente(id: string) {
   pacientes = pacientes.filter((p) => p.id !== id);
