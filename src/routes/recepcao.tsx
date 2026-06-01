@@ -9,6 +9,7 @@ import {
   removerPaciente,
   type Prioridade,
 } from "@/lib/queue-store";
+import { updateStatus } from "@/lib/status.functions";
 import { aiDashboard } from "@/lib/ai-dashboard.functions";
 
 export const Route = createFileRoute("/recepcao")({
@@ -38,8 +39,38 @@ const prioridadeBadge: Record<Prioridade, string> = {
 };
 function RecepcaoPage() {
   const pacientes = usePacientes();
-  const fila = useMemo(() => calcularFila(pacientes.filter((p) => p.checked_in)), [pacientes]);
+  const [statuses, setStatuses] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    let cancelled = false;
+    const fetchStatus = async () => {
+      try {
+        const res = await fetch("/src/public/status.txt");
+        if (!res.ok) return;
+        const txt = await res.text();
+        const obj = txt.trim() ? JSON.parse(txt) : {};
+        if (!cancelled) {
+          console.debug("Loaded statuses:", obj);
+          setStatuses(obj);
+        }
+      } catch (e) {
+        console.error("Failed fetching status file:", e);
+      }
+    };
+    fetchStatus();
+    const id = setInterval(fetchStatus, 10_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  const fila = useMemo(
+    () => calcularFila(pacientes.filter((p) => p.checked_in === true || statuses[p.nome] === true)),
+    [pacientes, statuses],
+  );
   const callAi = useServerFn(aiDashboard);
+  const updateStatusFn = useServerFn(updateStatus);
   const [ai, setAi] = useState<{
     pico_esperado: string;
     sugestao: string;
@@ -62,9 +93,12 @@ function RecepcaoPage() {
             })),
           },
         });
-        if (!cancelled) setAi(result);
+        if (!cancelled) {
+          console.debug("AI result:", result);
+          setAi(result);
+        }
       } catch (e) {
-        console.error(e);
+        console.error("AI error:", e);
       } finally {
         if (!cancelled) setAiLoading(false);
       }
@@ -201,7 +235,14 @@ function RecepcaoPage() {
                     </td>
                     <td className="px-4 py-4">
                       <button
-                        onClick={() => removerPaciente(p.id)}
+                        onClick={async () => {
+                          try {
+                            await updateStatusFn({ data: { nome: p.nome, checked_in: false } });
+                          } catch (e) {
+                            console.error("Failed updating status file:", e);
+                          }
+                          removerPaciente(p.id);
+                        }}
                         className="rounded-lg border border-border px-3 py-1 text-sm text-muted-foreground hover:bg-muted"
                       >
                         Chamar

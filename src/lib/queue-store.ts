@@ -133,6 +133,11 @@ export function adicionarPaciente(p: Omit<Paciente, "id" | "checked_in" | "check
   emit();
 }
 
+export function registrarPaciente(p: Omit<Paciente, "id" | "checked_in" | "checkin_time">) {
+  pacientes = [...pacientes, { ...p, id: crypto.randomUUID(), checked_in: false, checkin_time: null }];
+  emit();
+}
+
 export function checkInPaciente(id: string) {
   pacientes = pacientes.map((p) =>
     p.id === id ? { ...p, checked_in: true, checkin_time: Date.now() } : p,

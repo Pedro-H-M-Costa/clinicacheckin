@@ -39,7 +39,35 @@ export const aiDashboard = createServerFn({ method: "POST" })
       },
     };
 
-    const apiKey = process.env.LOVABLE_API_KEY!;
+    const apiKey = process.env.LOVABLE_API_KEY;
+
+    if (!apiKey) {
+      const toHm = (mins: number) => {
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+      };
+
+      let maxScheduled = nowMin;
+      for (const p of data.pacientes) {
+        const ag = toMin(p.horario_agendado);
+        if (ag > maxScheduled) maxScheduled = ag;
+      }
+
+      const peakTime = maxScheduled > 0 ? toHm(maxScheduled) : "—";
+      const suggestion = context.fila_atual.total_checkin > 5
+        ? "Considere abrir atendimento adicional"
+        : "Fila dentro da normalidade";
+      const hasAlert = context.fila_atual.atrasados > 2;
+
+      return {
+        pico_esperado: peakTime,
+        sugestao: suggestion,
+        alerta: hasAlert,
+        motivo_alerta: hasAlert ? `${context.fila_atual.atrasados} pacientes atrasados` : "",
+      };
+    }
+
     const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {

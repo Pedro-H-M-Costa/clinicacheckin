@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { updateStatus } from "@/lib/status.functions";
 import { Fingerprint, IdCard, CheckCircle2, Clock, User, AlertCircle, Smile, Phone, Calendar, SearchX } from "lucide-react";
 import { TotemLayout } from "@/components/totem/TotemLayout";
 import { BigButton } from "@/components/totem/BigButton";
@@ -129,6 +131,7 @@ function TotemPage() {
   const [cpf, setCpf] = useState("");
   const [convenio, setConvenio] = useState("");
   const [current, setCurrent] = useState<PatientRecord | null>(null);
+  const updateStatusFn = useServerFn(updateStatus);
 
   const reset = () => {
     setStep("welcome");
@@ -163,7 +166,7 @@ function TotemPage() {
     setStep("confirmConvenio");
   };
 
-  const finalizeCheckin = () => {
+  const finalizeCheckin = async () => {
     if (current) {
       const checkedIn = checkInByNome(current.nome);
       if (!checkedIn) {
@@ -175,6 +178,11 @@ function TotemPage() {
           tipo_consulta: "primeira_vez",
           risco_no_show: current.risco_no_show ?? 0.1,
         });
+      }
+      try {
+        await updateStatusFn({ data: { nome: current.nome, checked_in: true } });
+      } catch (e) {
+        console.error("Failed updating status file:", e);
       }
     }
     setStep("ticket");

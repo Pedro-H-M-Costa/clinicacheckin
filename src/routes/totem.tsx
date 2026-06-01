@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { adicionarPaciente, type Prioridade, type TipoConsulta } from "@/lib/queue-store";
+import { registrarPaciente, type Prioridade, type TipoConsulta } from "@/lib/queue-store";
 
 export const Route = createFileRoute("/totem")({
   component: TotemCheckin,
@@ -26,7 +26,7 @@ function TotemCheckin() {
     const agora = new Date();
     const chegada = `${String(agora.getHours()).padStart(2, "0")}:${String(agora.getMinutes()).padStart(2, "0")}`;
 
-    adicionarPaciente({
+    registrarPaciente({
       nome,
       horario_agendado: horario,
       horario_chegada: chegada,

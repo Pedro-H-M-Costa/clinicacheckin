@@ -1,0 +1,7 @@
+{
+  "Maria da Silva": false,
+  "Jorge dos Santos": true,
+  "Miguel Batista": true,
+  "Abner Amorim": true,
+  "Rafael Cardoso": false
+}
