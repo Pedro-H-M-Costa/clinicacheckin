@@ -38,7 +38,7 @@ const prioridadeBadge: Record<Prioridade, string> = {
 };
 function RecepcaoPage() {
   const pacientes = usePacientes();
-  const fila = useMemo(() => calcularFila(pacientes), [pacientes]);
+  const fila = useMemo(() => calcularFila(pacientes.filter((p) => p.checked_in)), [pacientes]);
   const callAi = useServerFn(aiDashboard);
   const [ai, setAi] = useState<{
     pico_esperado: string;
