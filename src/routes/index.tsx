@@ -38,6 +38,7 @@ interface PatientRecord {
   prioridade: Prioridade;
   especialidade: string;
   medico: string;
+  risco_no_show?: number;
 }
 
 interface LookupEntry {
@@ -100,6 +101,20 @@ const LOOKUP: LookupEntry[] = [
       medico: "Dr. Carlos Mendes",
     },
   },
+  {
+    cpf: "77777777777",
+    convenio: "7777777777777777",
+    patient: {
+      nome: "Rafael Cardoso",
+      horario_agendado: "14:50",
+      horario_chegada: "14:52",
+      prioridade: "normal",
+      especialidade: "Clínica Geral",
+      medico: "Dra. Helena Ribeiro",
+      risco_no_show: 0.85,
+    },
+  },
+
 ];
 
 function lookupByCpf(cpf: string): PatientRecord | "otherDate" | null {
@@ -156,7 +171,7 @@ function TotemPage() {
         horario_chegada: current.horario_chegada,
         prioridade: current.prioridade,
         tipo_consulta: "primeira_vez",
-        risco_no_show: 0.1,
+        risco_no_show: current.risco_no_show ?? 0.1,
       });
     }
     setStep("ticket");
