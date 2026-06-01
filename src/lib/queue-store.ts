@@ -93,45 +93,31 @@ export function calcularHorarioPrevisto(fila: PacienteCalculado[], posicao: numb
 }
 
 // ---------- Store ----------
-const mockInicial: Paciente[] = [
-  {
-    id: "1",
-    nome: "Maria Silva Santos",
-    horario_agendado: "09:00",
-    horario_chegada: "08:55",
-    prioridade: "idoso",
-    tipo_consulta: "retorno",
-    risco_no_show: 0.1,
-    checked_in: true,
-    checkin_time: Date.now(),
-  },
-];
-
 let pacientes: Paciente[] = [
   {
     id: "p-maria", nome: "Maria da Silva", horario_agendado: "14:30", horario_chegada: "14:18",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: true, checkin_time: Date.now(),
+    checked_in: false, checkin_time: null,
   },
   {
     id: "p-jorge", nome: "Jorge dos Santos", horario_agendado: "14:45", horario_chegada: "14:28",
     prioridade: "idoso", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: true, checkin_time: Date.now(),
+    checked_in: false, checkin_time: null,
   },
   {
     id: "p-miguel", nome: "Miguel Batista", horario_agendado: "14:00", horario_chegada: "14:30",
     prioridade: "deficiencia", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: true, checkin_time: Date.now(),
+    checked_in: false, checkin_time: null,
   },
   {
     id: "p-abner", nome: "Abner Amorim", horario_agendado: "15:00", horario_chegada: "14:57",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: true, checkin_time: Date.now(),
+    checked_in: false, checkin_time: null,
   },
   {
     id: "p-rafael", nome: "Rafael Cardoso", horario_agendado: "14:50", horario_chegada: "14:52",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.85,
-    checked_in: true, checkin_time: Date.now(),
+    checked_in: false, checkin_time: null,
   },
 ];
 
@@ -154,6 +140,15 @@ export function checkInPaciente(id: string) {
   emit();
 }
 
+export function checkInByNome(nome: string): boolean {
+  const target = pacientes.find((p) => p.nome === nome && !p.checked_in);
+  if (!target) return false;
+  pacientes = pacientes.map((p) =>
+    p.id === target.id ? { ...p, checked_in: true, checkin_time: Date.now() } : p,
+  );
+  emit();
+  return true;
+}
 
 export function removerPaciente(id: string) {
   pacientes = pacientes.filter((p) => p.id !== id);
@@ -171,12 +166,7 @@ export function usePacientes(): Paciente[] {
   );
 }
 
-if (typeof window !== "undefined") {
-  setInterval(() => emit(), 30_000);
-}
-
-
-// Tick a cada minuto para recalcular tempo de espera
+// Tick periódico para recalcular tempo de espera
 if (typeof window !== "undefined") {
   setInterval(() => emit(), 30_000);
 }
