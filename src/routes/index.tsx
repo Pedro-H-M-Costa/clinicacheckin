@@ -4,7 +4,7 @@ import { Fingerprint, IdCard, CheckCircle2, Clock, User, AlertCircle, Smile, Pho
 import { TotemLayout } from "@/components/totem/TotemLayout";
 import { BigButton } from "@/components/totem/BigButton";
 import { Numpad } from "@/components/totem/Numpad";
-import { adicionarPaciente, type Prioridade } from "@/lib/queue-store";
+import { adicionarPaciente, checkInByNome, type Prioridade } from "@/lib/queue-store";
 
 export const Route = createFileRoute("/")({
   component: TotemPage,
@@ -165,14 +165,17 @@ function TotemPage() {
 
   const finalizeCheckin = () => {
     if (current) {
-      adicionarPaciente({
-        nome: current.nome,
-        horario_agendado: current.horario_agendado,
-        horario_chegada: current.horario_chegada,
-        prioridade: current.prioridade,
-        tipo_consulta: "primeira_vez",
-        risco_no_show: current.risco_no_show ?? 0.1,
-      });
+      const checkedIn = checkInByNome(current.nome);
+      if (!checkedIn) {
+        adicionarPaciente({
+          nome: current.nome,
+          horario_agendado: current.horario_agendado,
+          horario_chegada: current.horario_chegada,
+          prioridade: current.prioridade,
+          tipo_consulta: "primeira_vez",
+          risco_no_show: current.risco_no_show ?? 0.1,
+        });
+      }
     }
     setStep("ticket");
   };
