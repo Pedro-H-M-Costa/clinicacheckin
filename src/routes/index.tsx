@@ -38,6 +38,7 @@ interface PatientRecord {
   prioridade: Prioridade;
   especialidade: string;
   medico: string;
+  risco_no_show?: number;
 }
 
 interface LookupEntry {
