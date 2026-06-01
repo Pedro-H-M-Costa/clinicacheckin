@@ -105,34 +105,27 @@ const mockInicial: Paciente[] = [
 
 let pacientes: Paciente[] = [
   {
-    id: "p1", nome: "Carlos Souza", horario_agendado: "14:00", horario_chegada: "14:30",
+    id: "p-maria", nome: "Maria da Silva", horario_agendado: "14:30", horario_chegada: "14:18",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
   },
   {
-    id: "p2", nome: "Maria Lima", horario_agendado: "14:30", horario_chegada: "14:25",
+    id: "p-jorge", nome: "Jorge dos Santos", horario_agendado: "14:45", horario_chegada: "14:28",
+    prioridade: "idoso", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+  },
+  {
+    id: "p-miguel", nome: "Miguel Batista", horario_agendado: "14:00", horario_chegada: "14:30",
+    prioridade: "deficiencia", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+  },
+  {
+    id: "p-abner", nome: "Abner Amorim", horario_agendado: "15:00", horario_chegada: "14:57",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
   },
   {
-    id: "p3", nome: "João Ferreira", horario_agendado: "14:45", horario_chegada: "14:40",
-    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-  },
-  {
-    id: "p4", nome: "Ana Beatriz", horario_agendado: "15:00", horario_chegada: "14:55",
-    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-  },
-  {
-    id: "p5", nome: "Pedro Monteiro", horario_agendado: "15:00", horario_chegada: "14:58",
-    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-  },
-  {
-    id: "p6", nome: "Fernanda Costa", horario_agendado: "15:15", horario_chegada: "15:10",
-    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-  },
-  {
-    id: "p7", nome: "Lucas Andrade", horario_agendado: "15:30", horario_chegada: "15:25",
-    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+    id: "p-rafael", nome: "Rafael Cardoso", horario_agendado: "14:50", horario_chegada: "14:52",
+    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.85,
   },
 ];
+
 
 const listeners = new Set<() => void>();
 
