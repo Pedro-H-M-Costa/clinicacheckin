@@ -100,6 +100,20 @@ const LOOKUP: LookupEntry[] = [
       medico: "Dr. Carlos Mendes",
     },
   },
+  {
+    cpf: "77777777777",
+    convenio: "7777777777777777",
+    patient: {
+      nome: "Rafael Cardoso",
+      horario_agendado: "14:50",
+      horario_chegada: "14:52",
+      prioridade: "normal",
+      especialidade: "Clínica Geral",
+      medico: "Dra. Helena Ribeiro",
+      risco_no_show: 0.85,
+    },
+  },
+
 ];
 
 function lookupByCpf(cpf: string): PatientRecord | "otherDate" | null {
