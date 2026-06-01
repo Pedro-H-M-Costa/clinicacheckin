@@ -11,6 +11,8 @@ export interface Paciente {
   prioridade: Prioridade;
   tipo_consulta: TipoConsulta;
   risco_no_show: number; // 0..1
+  checked_in: boolean;
+  checkin_time: number | null; // epoch ms
 }
 
 export interface PacienteCalculado extends Paciente {
