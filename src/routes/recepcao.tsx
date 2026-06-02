@@ -205,6 +205,8 @@ function RecepcaoPage() {
                       <p className="font-semibold text-foreground">{p.nome}</p>
                       <p className="text-xs text-muted-foreground">{p.tipo_consulta.replace("_", " ")}</p>
                     </td>
+                    <td className="px-4 py-4 text-foreground">{p.especialidade ?? <span className="text-muted-foreground">—</span>}</td>
+                    <td className="px-4 py-4 text-foreground">{p.medico ?? <span className="text-muted-foreground">—</span>}</td>
                     <td className="px-4 py-4">
                       <span
                         className={`inline-block rounded-full px-3 py-1 text-xs font-bold uppercase ${prioridadeBadge[p.prioridade]}`}
