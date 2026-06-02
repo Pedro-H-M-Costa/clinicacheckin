@@ -174,6 +174,8 @@ function RecepcaoPage() {
               <tr>
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Nome</th>
+                <th className="px-4 py-3">Especialidade</th>
+                <th className="px-4 py-3">Médico</th>
                 <th className="px-4 py-3">Prioridade</th>
                 <th className="px-4 py-3">Agendado</th>
                 <th className="px-4 py-3">Chegada</th>
@@ -203,6 +205,8 @@ function RecepcaoPage() {
                       <p className="font-semibold text-foreground">{p.nome}</p>
                       <p className="text-xs text-muted-foreground">{p.tipo_consulta.replace("_", " ")}</p>
                     </td>
+                    <td className="px-4 py-4 text-foreground">{p.especialidade ?? <span className="text-muted-foreground">—</span>}</td>
+                    <td className="px-4 py-4 text-foreground">{p.medico ?? <span className="text-muted-foreground">—</span>}</td>
                     <td className="px-4 py-4">
                       <span
                         className={`inline-block rounded-full px-3 py-1 text-xs font-bold uppercase ${prioridadeBadge[p.prioridade]}`}
@@ -253,7 +257,7 @@ function RecepcaoPage() {
               })}
               {!fila.length && (
                 <tr>
-                  <td colSpan={10} className="px-4 py-12 text-center text-muted-foreground">
+                  <td colSpan={12} className="px-4 py-12 text-center text-muted-foreground">
                     Nenhum paciente na fila.
                   </td>
                 </tr>
