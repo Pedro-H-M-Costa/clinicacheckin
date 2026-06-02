@@ -257,7 +257,7 @@ function RecepcaoPage() {
               })}
               {!fila.length && (
                 <tr>
-                  <td colSpan={10} className="px-4 py-12 text-center text-muted-foreground">
+                  <td colSpan={12} className="px-4 py-12 text-center text-muted-foreground">
                     Nenhum paciente na fila.
                   </td>
                 </tr>
