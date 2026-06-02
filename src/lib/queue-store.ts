@@ -13,6 +13,8 @@ export interface Paciente {
   risco_no_show: number; // 0..1
   checked_in: boolean;
   checkin_time: number | null; // epoch ms
+  especialidade?: string;
+  medico?: string;
 }
 
 export interface PacienteCalculado extends Paciente {
