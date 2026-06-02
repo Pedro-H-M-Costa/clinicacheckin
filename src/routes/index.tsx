@@ -176,6 +176,8 @@ function TotemPage() {
           prioridade: current.prioridade,
           tipo_consulta: "primeira_vez",
           risco_no_show: current.risco_no_show ?? 0.1,
+          especialidade: current.especialidade,
+          medico: current.medico,
         });
       }
       try {
