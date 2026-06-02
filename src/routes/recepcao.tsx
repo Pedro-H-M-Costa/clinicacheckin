@@ -174,6 +174,8 @@ function RecepcaoPage() {
               <tr>
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Nome</th>
+                <th className="px-4 py-3">Especialidade</th>
+                <th className="px-4 py-3">Médico</th>
                 <th className="px-4 py-3">Prioridade</th>
                 <th className="px-4 py-3">Agendado</th>
                 <th className="px-4 py-3">Chegada</th>
