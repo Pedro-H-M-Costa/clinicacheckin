@@ -97,29 +97,34 @@ export function calcularHorarioPrevisto(fila: PacienteCalculado[], posicao: numb
 // ---------- Store ----------
 let pacientes: Paciente[] = [
   {
-    id: "p-maria", nome: "Maria da Silva", horario_agendado: "14:30", horario_chegada: "14:18",
+    id: "p-maria", nome: "Maria da Silva", horario_agendado: "15:30", horario_chegada: "15:18",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: false, checkin_time: null,
+    checked_in: true, checkin_time: Date.now(),
+    especialidade: "Clínica Geral", medico: "Dra. Helena Ribeiro",
   },
   {
-    id: "p-jorge", nome: "Jorge dos Santos", horario_agendado: "14:45", horario_chegada: "14:28",
+    id: "p-jorge", nome: "Jorge dos Santos", horario_agendado: "15:45", horario_chegada: "15:28",
     prioridade: "idoso", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: false, checkin_time: null,
+    checked_in: true, checkin_time: Date.now(),
+    especialidade: "Geriatria", medico: "Dr. Paulo Andrade",
   },
   {
-    id: "p-miguel", nome: "Miguel Batista", horario_agendado: "14:00", horario_chegada: "14:30",
+    id: "p-miguel", nome: "Miguel Batista", horario_agendado: "17:00", horario_chegada: "17:30",
     prioridade: "deficiencia", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: false, checkin_time: null,
+    checked_in: true, checkin_time: Date.now(),
+    especialidade: "Ortopedia", medico: "Dr. Rafael Lima",
   },
   {
-    id: "p-abner", nome: "Abner Amorim", horario_agendado: "15:00", horario_chegada: "14:57",
+    id: "p-abner", nome: "Abner Amorim", horario_agendado: "17:30", horario_chegada: "17:27",
     prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
-    checked_in: false, checkin_time: null,
+    checked_in: true, checkin_time: Date.now(),
+    especialidade: "Cardiologia", medico: "Dr. Carlos Mendes",
   },
   {
-    id: "p-rafael", nome: "Rafael Cardoso", horario_agendado: "14:50", horario_chegada: "14:52",
-    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.85,
-    checked_in: false, checkin_time: null,
+    id: "p-pitch", nome: "Pitch", horario_agendado: "17:00", horario_chegada: "17:02",
+    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+    checked_in: true, checkin_time: Date.now(),
+    especialidade: "Clínica Geral", medico: "Dra. Helena Ribeiro",
   },
 ];
 
