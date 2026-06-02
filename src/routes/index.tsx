@@ -115,7 +115,78 @@ const LOOKUP: LookupEntry[] = [
       medico: "Dra. Helena Ribeiro",
     },
   },
-
+  {
+    cpf: "88888888888",
+    convenio: "8888888888888888",
+    patient: {
+      nome: "Ana Beatriz Lima",
+      horario_agendado: "15:00",
+      horario_chegada: "14:55",
+      prioridade: "normal",
+      especialidade: "Dermatologia",
+      medico: "Dra. Fernanda Costa",
+    },
+  },
+  {
+    cpf: "99999999999",
+    convenio: "9999999999999999",
+    patient: {
+      nome: "Roberto Carlos Dias",
+      horario_agendado: "15:15",
+      horario_chegada: "15:10",
+      prioridade: "idoso",
+      especialidade: "Geriatria",
+      medico: "Dr. Paulo Andrade",
+    },
+  },
+  {
+    cpf: "10101010101",
+    convenio: "1010101010101010",
+    patient: {
+      nome: "Juliana Martins",
+      horario_agendado: "16:00",
+      horario_chegada: "16:05",
+      prioridade: "gestante",
+      especialidade: "Ginecologia",
+      medico: "Dra. Carla Souza",
+    },
+  },
+  {
+    cpf: "12121212121",
+    convenio: "1212121212121212",
+    patient: {
+      nome: "Fernando Henrique",
+      horario_agendado: "16:30",
+      horario_chegada: "16:40",
+      prioridade: "normal",
+      especialidade: "Ortopedia",
+      medico: "Dr. Rafael Lima",
+    },
+  },
+  {
+    cpf: "13131313131",
+    convenio: "1313131313131313",
+    patient: {
+      nome: "Beatriz Cristina",
+      horario_agendado: "18:00",
+      horario_chegada: "17:50",
+      prioridade: "normal",
+      especialidade: "Cardiologia",
+      medico: "Dr. Carlos Mendes",
+    },
+  },
+  {
+    cpf: "14141414141",
+    convenio: "1414141414141414",
+    patient: {
+      nome: "Lucas Oliveira",
+      horario_agendado: "14:45",
+      horario_chegada: "14:42",
+      prioridade: "urgente",
+      especialidade: "Clínica Geral",
+      medico: "Dra. Helena Ribeiro",
+    },
+  },
 ];
 
 function lookupByCpf(cpf: string): PatientRecord | "otherDate" | null {
