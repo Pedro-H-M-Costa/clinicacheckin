@@ -126,6 +126,42 @@ let pacientes: Paciente[] = [
     checked_in: true, checkin_time: Date.now(),
     especialidade: "Clínica Geral", medico: "Dra. Helena Ribeiro",
   },
+  {
+    id: "p-ana", nome: "Ana Beatriz Lima", horario_agendado: "15:00", horario_chegada: "14:55",
+    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+    checked_in: true, checkin_time: Date.now(),
+    especialidade: "Dermatologia", medico: "Dra. Fernanda Costa",
+  },
+  {
+    id: "p-roberto", nome: "Roberto Carlos Dias", horario_agendado: "15:15", horario_chegada: "15:10",
+    prioridade: "idoso", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+    checked_in: true, checkin_time: Date.now(),
+    especialidade: "Geriatria", medico: "Dr. Paulo Andrade",
+  },
+  {
+    id: "p-juliana", nome: "Juliana Martins", horario_agendado: "16:00", horario_chegada: "16:05",
+    prioridade: "gestante", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+    checked_in: true, checkin_time: Date.now(),
+    especialidade: "Ginecologia", medico: "Dra. Carla Souza",
+  },
+  {
+    id: "p-fernando", nome: "Fernando Henrique", horario_agendado: "16:30", horario_chegada: "16:40",
+    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+    checked_in: true, checkin_time: Date.now(),
+    especialidade: "Ortopedia", medico: "Dr. Rafael Lima",
+  },
+  {
+    id: "p-beatriz", nome: "Beatriz Cristina", horario_agendado: "18:00", horario_chegada: "17:50",
+    prioridade: "normal", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+    checked_in: true, checkin_time: Date.now(),
+    especialidade: "Cardiologia", medico: "Dr. Carlos Mendes",
+  },
+  {
+    id: "p-lucas", nome: "Lucas Oliveira", horario_agendado: "14:45", horario_chegada: "14:42",
+    prioridade: "urgente", tipo_consulta: "primeira_vez", risco_no_show: 0.1,
+    checked_in: true, checkin_time: Date.now(),
+    especialidade: "Clínica Geral", medico: "Dra. Helena Ribeiro",
+  },
 ];
 
 
